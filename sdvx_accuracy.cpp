@@ -1768,12 +1768,16 @@ static void draw_accuracy_timeline_canvas(
 
     dl->AddLine(ImVec2(p0.x + 2, center_y), ImVec2(p1.x - 2, center_y), IM_COL32(180, 210, 235, 110), 1.0f);
 
-    const char* top_lbl = g_ui.invert_early_late_axis ? "LATE (+ms)" : "EARLY (-ms)";
-    const char* bot_lbl = g_ui.invert_early_late_axis ? "EARLY (-ms)" : "LATE (+ms)";
-    ImU32 top_col = g_ui.invert_early_late_axis ? IM_COL32(70, 165, 255, 175) : IM_COL32(255, 80, 105, 175);
-    ImU32 bot_col = g_ui.invert_early_late_axis ? IM_COL32(255, 80, 105, 175) : IM_COL32(70, 165, 255, 175);
-    dl->AddText(ImVec2(p0.x + 6, plot_top + 2), top_col, top_lbl);
-    dl->AddText(ImVec2(p0.x + 6, plot_bot - 15), bot_col, bot_lbl);
+    if (plot_h >= 42.0f) {
+        const char* top_lbl = g_ui.invert_early_late_axis ? "LATE (+ms)" : "EARLY (-ms)";
+        const char* bot_lbl = g_ui.invert_early_late_axis ? "EARLY (-ms)" : "LATE (+ms)";
+        ImU32 top_col = g_ui.invert_early_late_axis ? IM_COL32(70, 165, 255, 175) : IM_COL32(255, 80, 105, 175);
+        ImU32 bot_col = g_ui.invert_early_late_axis ? IM_COL32(255, 80, 105, 175) : IM_COL32(70, 165, 255, 175);
+        dl->AddText(ImVec2(p0.x + 6, plot_top + 2), top_col, top_lbl);
+        dl->AddText(ImVec2(p0.x + 6, plot_bot - 15), bot_col, bot_lbl);
+    } else {
+        dl->AddText(ImVec2(p0.x + 6, center_y - 7.0f), IM_COL32(160, 185, 215, 150), "8s");
+    }
 
     auto time_to_x = [&](float t) -> float {
         float norm = (t - view_start_sec) / duration;
