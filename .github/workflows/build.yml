@@ -1,0 +1,54 @@
+name: Build & Release
+
+on:
+  push:
+    branches: [ main ]
+    tags: [ 'v*' ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup MSVC x64
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+
+      - name: Compile sdvx_accuracy.dll
+        shell: cmd
+        run: |
+          cl.exe /nologo /std:c++20 /EHsc /O2 /MD /utf-8 /DNOMINMAX /DWIN32_LEAN_AND_MEAN /D_CRT_SECURE_NO_WARNINGS /I"." /I"imgui" ^
+            sdvx_accuracy.cpp ^
+            imgui\imgui.cpp ^
+            imgui\imgui_draw.cpp ^
+            imgui\imgui_tables.cpp ^
+            imgui\imgui_widgets.cpp ^
+            imgui\imgui_impl_dx9.cpp ^
+            /LD /Fe:"sdvx_accuracy.dll" ^
+            /link user32.lib gdi32.lib d3d9.lib imm32.lib
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sdvx_accuracy-win64
+          path: sdvx_accuracy.dll
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          gh release create "${GITHUB_REF_NAME}" sdvx_accuracy.dll \
+            --title "SDVX Accuracy Timeline ${GITHUB_REF_NAME}" \
+            --generate-notes
