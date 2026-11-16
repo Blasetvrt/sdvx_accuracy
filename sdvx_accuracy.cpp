@@ -906,7 +906,10 @@ static void save_config() {
 static void load_config() {
     std::string p = get_game_dir() + "\\sdvx_accuracy_config.ini";
     std::ifstream ifs(p);
-    if (!ifs.is_open()) return;
+    if (!ifs.is_open()) {
+        save_config();
+        return;
+    }
     std::string line;
     while (std::getline(ifs, line)) {
         size_t eq = line.find('=');

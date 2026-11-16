@@ -10,8 +10,10 @@
 # Logs & runtime configs
 *.log
 *.ini
+!sdvx_accuracy_config.ini
 exports/
 
 # MSVC/VS temp files
 Microsoft/
 *.tmp
+

@@ -49,6 +49,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: bash
         run: |
-          gh release create "${GITHUB_REF_NAME}" sdvx_accuracy.dll \
+          gh release create "${GITHUB_REF_NAME}" sdvx_accuracy.dll sdvx_accuracy_config.ini \
             --title "SDVX Accuracy Timeline ${GITHUB_REF_NAME}" \
             --generate-notes
+
