@@ -1,0 +1,17 @@
+# Build artifacts
+*.obj
+*.lib
+*.exp
+*.pdb
+*.ilk
+*.dll
+*.exe
+
+# Logs & runtime configs
+*.log
+*.ini
+exports/
+
+# MSVC/VS temp files
+Microsoft/
+*.tmp
